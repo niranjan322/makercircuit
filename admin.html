@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - MakerCircuit</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .admin-table th, .admin-table td {
+            text-align: left;
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .admin-table th {
+            background: rgba(0, 0, 0, 0.6);
+            color: var(--neon-blue);
+        }
+        .admin-table tr:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .tag-repairing {
+            color: var(--neon-green);
+            font-weight: 600;
+        }
+        .tag-project {
+            color: var(--neon-blue);
+            font-weight: 600;
+        }
+    </style>
+    <script>
+        if (!localStorage.getItem('token')) {
+            alert('Please login to access this page.');
+            window.location.href = 'login.html';
+        }
+    </script>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <h1 class="logo glow-text-blue">Admin</h1>
+            <ul class="nav-links">
+                <li><a href="index.html#home">Home</a></li>
+                <li><a href="repairing.html">Repairing</a></li>
+                <li><a href="project-making.html">Project Making</a></li>
+                <li><a href="my-projects.html">My Projects</a></li>
+                <li id="nav-admin" style="display:none;"><a href="admin.html" class="glow-text-green">Admin</a></li>
+                <li id="auth-nav-item"><a href="login.html" class="btn btn-outline" style="padding: 0.4rem 1.2rem; font-size: 0.9rem;">Login</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="section" style="padding-top: 120px;">
+        <div class="container">
+            <h2 class="section-title glow-text-blue">Admin Dashboard</h2>
+            <p style="text-align:center; color: var(--text-light); margin-bottom: 2rem;">Overview of Users and Customer Requests/Reviews.</p>
+
+            <div id="errorMsg" style="color:#ff4c4c; text-align:center; display:none;"></div>
+
+            <h3 class="glow-text-green" style="margin-top: 2rem;">Registered Users</h3>
+            <div style="overflow-x:auto;">
+                <table class="admin-table" id="usersTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Users will be injected here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 class="glow-text-blue" style="margin-top: 3rem;">Customer Requests & Reviews</h3>
+            <div style="overflow-x:auto;">
+                <table class="admin-table" id="requestsTable">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>User (Email)</th>
+                            <th>Type</th>
+                            <th>Cause / Title</th>
+                            <th>Details</th>
+                            <th>Review</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Requests will be injected here -->
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </section>
+
+    <script>
+        function checkAuth() {
+            const token = localStorage.getItem('token');
+            const user = JSON.parse(localStorage.getItem('user'));
+            const authNavItem = document.getElementById('auth-nav-item');
+            
+            const adminNavItem = document.getElementById('nav-admin');
+            if (adminNavItem && user && user.email === 'k.niranjan140506@gmail.com') {
+                adminNavItem.style.display = 'inline-block';
+            }
+            
+            if (token && user && authNavItem) {
+                authNavItem.innerHTML = `<span style="color:var(--neon-green); font-weight:600; margin-right: 15px;">${user.name}</span> <a href="#" onclick="logout()" class="btn btn-outline" style="padding: 0.4rem 1.2rem; font-size: 0.9rem; border-color: #ff4c4c; color: #ff4c4c;">Logout</a>`;
+            }
+        }
+        
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'index.html';
+        }
+        
+        async function loadAdminData() {
+            const token = localStorage.getItem('token');
+            try {
+                const response = await fetch('/api/admin/data', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error('Failed to fetch data or unauthorized.');
+                }
+                const data = await response.json();
+                
+                // Populate Users Table
+                const usersTbody = document.querySelector('#usersTable tbody');
+                usersTbody.innerHTML = '';
+                data.users.forEach(u => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `<td>${u.id}</td><td>${u.name}</td><td>${u.email}</td>`;
+                    usersTbody.appendChild(tr);
+                });
+
+                // Populate Requests Table
+                const requestsTbody = document.querySelector('#requestsTable tbody');
+                requestsTbody.innerHTML = '';
+                data.requests.forEach(r => {
+                    const tr = document.createElement('tr');
+                    const dateDesc = new Date(r.createdAt).toLocaleString();
+                    const typeClass = r.type === 'repairing' ? 'tag-repairing' : 'tag-project';
+                    const typeText = r.type === 'repairing' ? 'Repairing' : 'Project Making';
+                    const subject = encodeURIComponent(`Re: Your MakerCircuit Request - ${r.cause}`);
+                    const body = encodeURIComponent(`Hi ${r.userName},\n\nRegarding your ${typeText} request for "${r.cause}":\n\n`);
+                    tr.innerHTML = `
+                        <td style="font-size:0.8rem;">${dateDesc}</td>
+                        <td>${r.userName}<br><small style="color:#aaa;">${r.userEmail}</small></td>
+                        <td class="${typeClass}">${typeText}</td>
+                        <td>${r.cause}</td>
+                        <td>${r.details}</td>
+                        <td><em>${r.review || '-'}</em></td>
+                        <td><a href="mailto:${r.userEmail}?subject=${subject}&body=${body}" class="btn btn-outline" style="padding: 0.3rem 0.6rem; font-size: 0.8rem; border-color: var(--neon-blue); color: var(--neon-blue);"><i class="fas fa-envelope"></i> Reply</a></td>
+                    `;
+                    requestsTbody.appendChild(tr);
+                });
+            } catch (err) {
+                document.getElementById('errorMsg').style.display = 'block';
+                document.getElementById('errorMsg').innerText = err.message;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAuth();
+            loadAdminData();
+        });
+    </script>
+</body>
+</html>

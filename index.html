@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MakerCircuit - Tech & Innovations</title>
+    <meta name="description" content="MakerCircuit provides reliable electronic repair services, custom project building, and innovative tech solutions.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Sticky Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <h1 class="logo glow-text-blue">MakerCircuit</h1>
+            <ul class="nav-links">
+                <li><a href="index.html#home">Home</a></li>
+                <li><a href="repairing.html">Repairing</a></li>
+                <li><a href="project-making.html">Project Making</a></li>
+                <li><a href="my-projects.html">My Projects</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+                <li id="nav-admin" style="display:none;"><a href="admin.html">Admin</a></li>
+                <li id="auth-nav-item"><a href="login.html" class="btn btn-outline" style="padding: 0.4rem 1.2rem; font-size: 0.9rem;">Login</a></li>
+            </ul>
+            <div class="hamburger">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Homepage / Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title glow-text-blue">MakerCircuit</h1>
+            <h2 class="hero-tagline">Repairing <span class="accent-green">|</span> Project Making <span class="accent-green">|</span> Innovation</h2>
+            <p class="hero-intro">I provide reliable electronic repair services and build innovative projects to solve real-world problems.</p>
+            
+            <div class="feature-cards">
+                <div class="card glass-card">
+                    <i class="fas fa-tools icon-neon-blue"></i>
+                    <h3>Repairing</h3>
+                    <p>Expert mobile and electronics fixing.</p>
+                    <a href="repairing.html" class="btn btn-outline">Learn More</a>
+                </div>
+                <div class="card glass-card">
+                    <i class="fas fa-microchip icon-neon-green"></i>
+                    <h3>Project Making</h3>
+                    <p>Custom circuits and robotics builds.</p>
+                    <a href="project-making.html" class="btn btn-outline">Learn More</a>
+                </div>
+                <div class="card glass-card">
+                    <i class="fas fa-lightbulb icon-neon-blue"></i>
+                    <h3>My Projects</h3>
+                    <p>Innovative systems and prototypes.</p>
+                    <a href="my-projects.html" class="btn btn-outline">Explore</a>
+                </div>
+            </div>
+        </div>
+        <div class="background-grid"></div>
+    </section>
+
+    <!-- Section 1: Repairing -->
+    <section id="repairing" class="section">
+        <div class="container">
+            <h2 class="section-title glow-text-green">Repair Services</h2>
+            
+            <div class="image-grid">
+                <!-- Image Cards -->
+                <div class="image-card">
+                    <div class="img-wrapper">
+                        <img src="assets/mobile_repair_demo.png" alt="Mobile Display Replacement">
+                    </div>
+                    <div class="card-content">
+                        <h3>Mobile Display Replacement</h3>
+                        <p>Fixed broken screen and restored touch capability.</p>
+                    </div>
+                </div>
+                <!-- Additional generic item -->
+                <div class="image-card">
+                    <div class="img-wrapper">
+                        <img src="https://images.unsplash.com/photo-1597872200969-2f65d56b6116?auto=format&fit=crop&q=80&w=600" alt="Motherboard Soldering">
+                    </div>
+                    <div class="card-content">
+                        <h3>Motherboard Soldering</h3>
+                        <p>Detailed component level repair and testing.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="reviews-section">
+                <h3 class="subtitle">Customer Reviews</h3>
+                <div class="reviews-grid">
+                    <div class="review-card glass-card">
+                        <div class="stars">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        </div>
+                        <p class="review-text">"Fast and reliable! My phone works perfectly after the screen replacement."</p>
+                        <h4 class="customer-name">- Rahul S.</h4>
+                    </div>
+                    <div class="review-card glass-card">
+                        <div class="stars">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <p class="review-text">"Excellent technical skills, found the short circuit very quickly."</p>
+                        <h4 class="customer-name">- Anil M.</h4>
+                    </div>
+                </div>
+                <div class="center-btn">
+                    <a href="https://forms.google.com" target="_blank" class="btn btn-primary btn-glow">Submit Your Review</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 2: Project Making -->
+    <section id="project-making" class="section alt-bg">
+        <div class="container">
+            <h2 class="section-title glow-text-blue">Custom Project Building</h2>
+            
+            <div class="image-grid">
+                <div class="image-card">
+                    <div class="img-wrapper">
+                        <img src="assets/fire_fighting_robot.png" alt="Fire Fighting Robot">
+                    </div>
+                    <div class="card-content">
+                        <h3>Fire Fighting Robot</h3>
+                        <p>Autonomous Arduino-based robot navigating toward flames and extinguishing them.</p>
+                    </div>
+                </div>
+                <div class="image-card">
+                    <div class="img-wrapper">
+                        <img src="assets/home_automation_demo.png" alt="Home Automation System">
+                    </div>
+                    <div class="card-content">
+                        <h3>Home Automation System</h3>
+                        <p>IoT-enabled smart switchboard controlled via smartphone APIs over ESP32.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="center-btn mt-2">
+                <a href="#contact" class="btn btn-primary btn-glow-green">Request a Project</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3: My Projects -->
+    <section id="my-projects" class="section">
+        <div class="container">
+            <h2 class="section-title glow-text-green">My Innovations</h2>
+            
+            <div class="innovation-showcase">
+                <div class="innovation-card glass-card flex-row">
+                    <div class="innovation-img img-wrapper">
+                        <img src="assets/my_innovation.png" alt="Advanced Prototyping Module">
+                    </div>
+                    <div class="innovation-details">
+                        <h3>Advanced Sensor Dashboard</h3>
+                        <p>A sophisticated data-logging system that accumulates comprehensive environmental metrics and renders them on an OLED display.</p>
+                        <ul class="tech-stack">
+                            <li><i class="fas fa-microchip"></i> ESP32</li>
+                            <li><i class="fas fa-wifi"></i> WebSockets</li>
+                            <li><i class="fas fa-code"></i> C++ / Python</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section alt-bg">
+        <div class="container">
+            <h2 class="section-title glow-text-blue">Get In Touch</h2>
+            <div class="contact-grid">
+                <div class="contact-form glass-card">
+                    <form onsubmit="event.preventDefault(); alert('Message sent successfully!');">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" id="name" required placeholder="Enter your name">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" required placeholder="Enter your phone">
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" rows="4" required placeholder="How can I help you?"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary block-btn">Send Message</button>
+                    </form>
+                </div>
+                
+                <div class="contact-info">
+                    <div class="info-card glass-card">
+                        <i class="fab fa-whatsapp icon-neon-green"></i>
+                        <h3>WhatsApp</h3>
+                        <p>+91 9876543210</p>
+                        <a href="https://wa.me/919876543210" class="btn btn-outline" target="_blank">Chat Now</a>
+                    </div>
+                    <div class="info-card glass-card">
+                        <i class="fas fa-envelope icon-neon-blue"></i>
+                        <h3>Email</h3>
+                        <p>hello@makercircuit.com</p>
+                        <a href="mailto:hello@makercircuit.com" class="btn btn-outline">Email Me</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <h2 class="glow-text-blue">MakerCircuit</h2>
+                <p>Repairing | Project Making | Innovation</p>
+            </div>
+            <div class="social-links">
+                <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-whatsapp"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-github"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 MakerCircuit. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Check if the user is logged in
+        function checkAuth() {
+            const token = localStorage.getItem('token');
+            const user = JSON.parse(localStorage.getItem('user'));
+            const authNavItem = document.getElementById('auth-nav-item');
+            
+            const adminNavItem = document.getElementById('nav-admin');
+            if (adminNavItem && user && user.email === 'k.niranjan140506@gmail.com') {
+                adminNavItem.style.display = 'inline-block';
+            }
+            
+            if (token && user && authNavItem) {
+                authNavItem.innerHTML = `<span style="color:var(--neon-green); font-weight:600; margin-right: 15px;">Welcome, ${user.name}</span> <a href="#" onclick="logout()" class="btn btn-outline" style="padding: 0.4rem 1.2rem; font-size: 0.9rem; border-color: #ff4c4c; color: #ff4c4c;">Logout</a>`;
+            }
+        }
+        
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.reload();
+        }
+        
+        document.addEventListener('DOMContentLoaded', checkAuth);
+    </script>
+</body>
+</html>

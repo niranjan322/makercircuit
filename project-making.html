@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Making - MakerCircuit</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script>
+        // Check if user is logged in
+        if (!localStorage.getItem('token')) {
+            alert('Please login to access this page.');
+            window.location.href = 'login.html';
+        }
+    </script>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <h1 class="logo glow-text-blue">MakerCircuit</h1>
+            <ul class="nav-links">
+                <li><a href="index.html#home">Home</a></li>
+                <li><a href="repairing.html">Repairing</a></li>
+                <li><a href="project-making.html">Project Making</a></li>
+                <li><a href="my-projects.html">My Projects</a></li>
+                <li id="nav-admin" style="display:none;"><a href="admin.html">Admin</a></li>
+                <li id="auth-nav-item"><a href="login.html" class="btn btn-outline" style="padding: 0.4rem 1.2rem; font-size: 0.9rem;">Login</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="section" style="padding-top: 120px;">
+        <div class="container">
+            <h2 class="section-title glow-text-blue">Custom Project Building</h2>
+            
+            <div class="flex-row glass-card" style="margin-bottom: 2rem; gap: 2rem;">
+                <div class="img-wrapper" style="flex: 1;">
+                    <img src="assets/fire_fighting_robot.png" alt="Project Building" style="width: 100%; border-radius: 12px; min-height: 200px; background: #111;">
+                </div>
+                <div style="flex: 1;">
+                    <h3 class="glow-text-green" style="margin-bottom: 1rem;">Project Definition</h3>
+                    <p>We bring your electronic and robotics concepts to life. Whether it's an engineering college requirement, a hobby idea, or a prototype, we build reliable automated systems.</p>
+                    <ul class="tech-stack" style="flex-direction: column; align-items: flex-start; margin-top: 1rem;">
+                        <li><i class="fas fa-microchip icon-neon-blue"></i> Custom PCB Design</li>
+                        <li><i class="fas fa-robot icon-neon-blue"></i> Robotics & Automation</li>
+                        <li><i class="fas fa-wifi icon-neon-blue"></i> IoT Solutions (ESP32/ESP8266)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="contact-form glass-card">
+                <h3>Submit Your Project Request / Review</h3>
+                <form id="projectForm">
+                    <div class="form-group">
+                        <label for="cause">Project Title</label>
+                        <input type="text" id="cause" required placeholder="e.g. Smart Car Parking System">
+                    </div>
+                    <div class="form-group">
+                        <label for="details">Project Requirements and Definition</label>
+                        <textarea id="details" rows="3" required placeholder="Detailed description of what you need the project to do..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="review">Additional Request / Review</label>
+                        <textarea id="review" rows="2" placeholder="Any specific review on previous projects or specific sensor requests"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary block-btn" style="background: var(--neon-blue);">Submit Request</button>
+                </form>
+                <div id="projectMessage" style="margin-top: 1rem; color: var(--neon-blue); text-align: center;"></div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function checkAuth() {
+            const token = localStorage.getItem('token');
+            const user = JSON.parse(localStorage.getItem('user'));
+            const authNavItem = document.getElementById('auth-nav-item');
+            
+            const adminNavItem = document.getElementById('nav-admin');
+            if (adminNavItem && user && user.email === 'k.niranjan140506@gmail.com') {
+                adminNavItem.style.display = 'inline-block';
+            }
+            
+            if (token && user && authNavItem) {
+                authNavItem.innerHTML = `<span style="color:var(--neon-green); font-weight:600; margin-right: 15px;">${user.name}</span> <a href="#" onclick="logout()" class="btn btn-outline" style="padding: 0.4rem 1.2rem; font-size: 0.9rem; border-color: #ff4c4c; color: #ff4c4c;">Logout</a>`;
+            }
+        }
+        
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'index.html';
+        }
+        
+        document.addEventListener('DOMContentLoaded', checkAuth);
+
+        document.getElementById('projectForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const cause = document.getElementById('cause').value;
+            const details = document.getElementById('details').value;
+            const review = document.getElementById('review').value;
+            const token = localStorage.getItem('token');
+
+            try {
+                const response = await fetch('/api/requests', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ type: 'project_making', cause, details, review })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    document.getElementById('projectMessage').innerText = 'Project request submitted successfully!';
+                    document.getElementById('projectForm').reset();
+                } else {
+                    document.getElementById('projectMessage').innerText = data.message || 'Error submitting request.';
+                    document.getElementById('projectMessage').style.color = '#ff4c4c';
+                }
+            } catch (err) {
+                document.getElementById('projectMessage').innerText = 'Server error.';
+                document.getElementById('projectMessage').style.color = '#ff4c4c';
+            }
+        });
+    </script>
+</body>
+</html>

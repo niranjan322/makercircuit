@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login / Register - MakerCircuit</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { display: flex; align-items: center; justify-content: center; min-height: 100vh; flex-direction: column; }
+        .auth-container { width: 100%; max-width: 400px; padding: 2.5rem; margin-top: 1rem; }
+        .tab-btn { background: none; border: none; font-size: 1.1rem; color: var(--text-secondary); cursor: pointer; padding: 0.5rem 1rem; border-bottom: 2px solid transparent; font-family: var(--font-heading); font-weight: 600; transition: 0.3s; }
+        .tab-btn:hover { color: var(--text-primary); }
+        .tab-btn.active { color: var(--neon-blue); border-bottom: 2px solid var(--neon-blue); }
+        .auth-form { display: none; margin-top: 2rem; }
+        .auth-form.active { display: block; animation: fadeIn 0.4s; }
+        .error-msg { color: #ff4c4c; font-size: 0.9rem; margin-top: 1rem; text-align: center; }
+        .success-msg { color: var(--neon-green); font-size: 0.9rem; margin-top: 1rem; text-align: center; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="logo glow-text-blue" style="font-size: 2.5rem; text-decoration: none;">MakerCircuit</a>
+    
+    <div class="auth-container glass-card">
+        <div style="display: flex; justify-content: center; gap: 2rem; margin-bottom: 1rem;">
+            <button class="tab-btn active" onclick="switchTab('login')">Login</button>
+            <button class="tab-btn" onclick="switchTab('register')">Register</button>
+        </div>
+
+        <!-- Login Form -->
+        <form id="login-form" class="auth-form active">
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="login-email" required placeholder="example@email.com">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="login-password" required placeholder="Enter your password">
+            </div>
+            <button type="submit" class="btn btn-primary btn-glow block-btn mt-2">Sign In</button>
+            <div id="login-msg" class="error-msg"></div>
+        </form>
+
+        <!-- Register Form -->
+        <form id="register-form" class="auth-form">
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" id="reg-name" required placeholder="John Doe">
+            </div>
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="reg-email" required placeholder="example@email.com">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="reg-password" required placeholder="Create a strong password">
+            </div>
+            <button type="submit" class="btn btn-primary btn-glow-green block-btn mt-2">Create Account</button>
+            <div id="reg-msg"></div>
+        </form>
+    </div>
+
+    <script src="auth.js"></script>
+</body>
+</html>
