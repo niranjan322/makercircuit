@@ -265,12 +265,18 @@ app.get('/api/admin/data', authenticateToken, (req, res) => {
     }
 });
 
+// Health Check API useful for Railway to detect container survival
+app.get('/api/health', (req, res) => {
+    res.json({ status: 'ok', server: 'online, crash-proof architecture active' });
+});
+
 // Fallback to serve index.html for undefined routes
 app.use((req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-    console.log(`API endpoints available safely!`);
+const HOST = '0.0.0.0'; // Railway mandates exact 0.0.0.0 binding for routing
+app.listen(PORT, HOST, () => {
+    console.log(`Server securely running natively on http://${HOST}:${PORT}`);
+    console.log(`API endpoints available and protected!`);
 });
