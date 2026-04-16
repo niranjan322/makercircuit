@@ -5,7 +5,7 @@ const bcrypt = require('bcryptjs');
 const fs = require('fs');
 const path = require('path');
 const morgan = require('morgan');
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -45,15 +45,8 @@ function saveRequests(requests) {
     fs.writeFileSync(requestsFile, JSON.stringify(requests, null, 2));
 }
 
-// Nodemailer Config
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        // You MUST replace this or setup ENV variables in Railway!
-        user: process.env.EMAIL_USER || 'k.niranjan140506@gmail.com',
-        pass: process.env.EMAIL_PASS || 'your_gmail_app_password_here'
-    }
-});
+// Resend Configuration API
+const resend = new Resend(process.env.RESEND_API_KEY || 're_dummy_key_here');
 
 function generateOTP() {
     return Math.floor(100000 + Math.random() * 900000).toString();
@@ -79,18 +72,16 @@ app.post('/api/send-otp', async (req, res) => {
         const expiresAt = Date.now() + 10 * 60 * 1000; // 10 minutes
         otpStore.set(email.toLowerCase(), { otp, expiresAt, type });
 
-        const mailOptions = {
-            from: process.env.EMAIL_USER || 'k.niranjan140506@gmail.com',
-            to: email,
-            subject: type === 'register' ? 'MakerCircuit - Registration OTP' : 'MakerCircuit - Password Reset OTP',
-            text: `Your OTP is: ${otp}. It will expire in 10 minutes.`
-        };
-
         console.log(`[DEPLOYER LOG - OTP GENERATED] For ${email}: ${otp}`);
 
-        // Fire off the email asynchronously without blocking the user interface
-        transporter.sendMail(mailOptions).catch(mailErr => {
-            console.error('Email failed to send. Ensure EMAIL_PASS is set. OTP logged to console.');
+        // Fire off the email asynchronously using Resend API
+        resend.emails.send({
+            from: process.env.EMAIL_FROM || 'onboarding@resend.dev', // You must verify a domain in Resend to change this
+            to: email,
+            subject: type === 'register' ? 'MakerCircuit - Registration OTP' : 'MakerCircuit - Password Reset OTP',
+            html: `<p>Your MakerCircuit Verification Code is: <strong>${otp}</strong><br><br>It will expire in 10 minutes.</p>`
+        }).catch(err => {
+            console.error('Resend failed to send email. Please ensure your RESEND_API_KEY is configured in your environments.');
         });
 
         res.json({ message: 'OTP processed successfully' });
