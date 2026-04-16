@@ -74,15 +74,23 @@ app.post('/api/send-otp', async (req, res) => {
 
         console.log(`[DEPLOYER LOG - OTP GENERATED] For ${email}: ${otp}`);
 
-        // Fire off the email asynchronously using Resend API
-        resend.emails.send({
-            from: process.env.EMAIL_FROM || 'onboarding@resend.dev', // You must verify a domain in Resend to change this
-            to: email,
-            subject: type === 'register' ? 'MakerCircuit - Registration OTP' : 'MakerCircuit - Password Reset OTP',
-            html: `<p>Your MakerCircuit Verification Code is: <strong>${otp}</strong><br><br>It will expire in 10 minutes.</p>`
-        }).catch(err => {
-            console.error('Resend failed to send email. Please ensure your RESEND_API_KEY is configured in your environments.');
-        });
+        // Fire off the email securely in a detached async block to absolutely prevent server crashes
+        (async () => {
+            try {
+                const { data, error } = await resend.emails.send({
+                    from: process.env.EMAIL_FROM || 'onboarding@resend.dev', // You must verify a domain in Resend to change this
+                    to: email,
+                    subject: type === 'register' ? 'MakerCircuit - Registration OTP' : 'MakerCircuit - Password Reset OTP',
+                    html: `<p>Your MakerCircuit Verification Code is: <strong>${otp}</strong><br><br>It will expire in 10 minutes.</p>`
+                });
+                
+                if (error) {
+                    console.error('Resend API returned an error:', error);
+                }
+            } catch (sdkErr) {
+                console.error('Resend SDK Exception (Ensure Node v18+ is running):', sdkErr.message);
+            }
+        })();
 
         res.json({ message: 'OTP processed successfully' });
     } catch (err) {
