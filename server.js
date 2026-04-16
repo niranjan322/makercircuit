@@ -88,12 +88,10 @@ app.post('/api/send-otp', async (req, res) => {
 
         console.log(`[DEPLOYER LOG - OTP GENERATED] For ${email}: ${otp}`);
 
-        try {
-            await transporter.sendMail(mailOptions);
-        } catch (mailErr) {
+        // Fire off the email asynchronously without blocking the user interface
+        transporter.sendMail(mailOptions).catch(mailErr => {
             console.error('Email failed to send. Ensure EMAIL_PASS is set. OTP logged to console.');
-            // We do not fail the request if mail fails so you can test it locally via the console log
-        }
+        });
 
         res.json({ message: 'OTP processed successfully' });
     } catch (err) {
