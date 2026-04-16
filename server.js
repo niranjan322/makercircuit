@@ -22,27 +22,48 @@ const requestsFile = path.join(__dirname, 'requests.json');
 // Memory store for OTPs
 const otpStore = new Map(); // key: email, value: { otp, expiresAt, type }
 
-if (!fs.existsSync(usersFile)) {
-    fs.writeFileSync(usersFile, JSON.stringify([]));
-}
-if (!fs.existsSync(requestsFile)) {
-    fs.writeFileSync(requestsFile, JSON.stringify([]));
+let memoryUsers = [];
+let memoryRequests = [];
+
+try {
+    if (!fs.existsSync(usersFile)) fs.writeFileSync(usersFile, JSON.stringify([]));
+    if (!fs.existsSync(requestsFile)) fs.writeFileSync(requestsFile, JSON.stringify([]));
+} catch (e) {
+    console.warn("[WARNING] Disk is read-only. Using Temporary Memory DB.");
 }
 
 function getUsers() {
-    return JSON.parse(fs.readFileSync(usersFile));
+    try {
+        return JSON.parse(fs.readFileSync(usersFile));
+    } catch {
+        return memoryUsers;
+    }
 }
 
 function saveUsers(users) {
-    fs.writeFileSync(usersFile, JSON.stringify(users, null, 2));
+    memoryUsers = users;
+    try {
+        fs.writeFileSync(usersFile, JSON.stringify(users, null, 2));
+    } catch {
+        console.warn("Cannot save to disk, kept in memory.");
+    }
 }
 
 function getRequests() {
-    return JSON.parse(fs.readFileSync(requestsFile));
+    try {
+        return JSON.parse(fs.readFileSync(requestsFile));
+    } catch {
+        return memoryRequests;
+    }
 }
 
 function saveRequests(requests) {
-    fs.writeFileSync(requestsFile, JSON.stringify(requests, null, 2));
+    memoryRequests = requests;
+    try {
+        fs.writeFileSync(requestsFile, JSON.stringify(requests, null, 2));
+    } catch {
+        console.warn("Cannot save to disk, kept in memory.");
+    }
 }
 
 // Resend Configuration API
@@ -275,8 +296,7 @@ app.use((req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-const HOST = '0.0.0.0'; // Railway mandates exact 0.0.0.0 binding for routing
-app.listen(PORT, HOST, () => {
-    console.log(`Server securely running natively on http://${HOST}:${PORT}`);
+app.listen(PORT, () => {
+    console.log(`Server securely running natively on PORT ${PORT}`);
     console.log(`API endpoints available and protected!`);
 });
