@@ -72,6 +72,7 @@
         </div>
     </section>
 
+    <script src="config.js"></script>
     <script>
         // Navbar user info
         function checkAuth() {
@@ -105,7 +106,7 @@
             const token = localStorage.getItem('token');
 
             try {
-                const response = await fetch('/api/requests', {
+                const response = await apiFetch('/api/requests', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

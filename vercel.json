@@ -1,0 +1,31 @@
+{
+  "version": 2,
+  "name": "makercircuit",
+  "builds": [
+    {
+      "src": "**/*.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "**/*.css",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "**/*.js",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "assets/**",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    { "src": "/", "dest": "/index.html" },
+    { "src": "/login", "dest": "/login.html" },
+    { "src": "/admin", "dest": "/admin.html" },
+    { "src": "/repairing", "dest": "/repairing.html" },
+    { "src": "/project-making", "dest": "/project-making.html" },
+    { "src": "/my-projects", "dest": "/my-projects.html" },
+    { "handle": "filesystem" }
+  ]
+}

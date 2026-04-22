@@ -5,3 +5,5 @@ log.txt
 err.log
 out.log
 .env
+.env.local
+.env.production

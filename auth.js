@@ -54,7 +54,7 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
     showMessage('login-msg', 'Authenticating...', false);
 
     try {
-        const res = await fetch('/api/login', {
+        const res = await apiFetch('/api/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password })
@@ -70,7 +70,7 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
             showMessage('login-msg', data.message || 'Login failed');
         }
     } catch (err) {
-        showMessage('login-msg', 'Server error. Make sure the Node.js API is running!');
+        showMessage('login-msg', 'Server error. Make sure the backend API is running!');
     }
 });
 
@@ -91,7 +91,7 @@ document.getElementById('register-form').addEventListener('submit', async (e) =>
     document.getElementById('reg-msg').style.color = 'var(--text-secondary)';
 
     try {
-        const res = await fetch('/api/send-otp', {
+        const res = await apiFetch('/api/send-otp', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, type: 'register' })
@@ -120,7 +120,7 @@ async function verifyRegistration() {
     
     try {
         const payload = { ...pendingRegData, otp };
-        const res = await fetch('/api/register', {
+        const res = await apiFetch('/api/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
@@ -154,7 +154,7 @@ document.getElementById('forgot-form').addEventListener('submit', async (e) => {
     showMessage('forgot-msg', 'Sending OTP to email...', false);
 
     try {
-        const res = await fetch('/api/send-otp', {
+        const res = await apiFetch('/api/send-otp', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, type: 'reset' })
@@ -187,7 +187,7 @@ async function resetPassword() {
     showMessage('forgot-msg', 'Resetting password...', false);
     
     try {
-        const res = await fetch('/api/reset-password', {
+        const res = await apiFetch('/api/reset-password', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, otp, newPassword })

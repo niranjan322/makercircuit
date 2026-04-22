@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: makercircuit-api
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGO_URI
+        sync: false   # Set this in Render Dashboard → Environment
+      - key: JWT_SECRET
+        sync: false   # Set this in Render Dashboard → Environment
+      - key: RESEND_API_KEY
+        sync: false   # Set this in Render Dashboard → Environment
+      - key: EMAIL_FROM
+        sync: false   # e.g. noreply@yourdomain.com (must be a verified Resend domain)
+      - key: ADMIN_EMAIL
+        value: k.niranjan140506@gmail.com
+      - key: FRONTEND_URL
+        sync: false   # Set to https://makercircuit.vercel.app after Vercel deploy
