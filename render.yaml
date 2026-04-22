@@ -1,9 +1,9 @@
 services:
   - type: web
-    name: makercircuit-api
+    name: makercircuitmc
     runtime: node
     plan: free
-    buildCommand: npm install
+    buildCommand: npm install --production=false
     startCommand: node server.js
     healthCheckPath: /api/health
     envVars:
