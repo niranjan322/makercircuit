@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
+const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -32,6 +33,9 @@ app.use(cors({
 
 app.use(morgan('dev'));
 app.use(express.json());
+
+// ─── Static Files ─────────────────────────────────────────────────────────────
+app.use(express.static(path.join(__dirname)));
 
 // ─── MongoDB Connection ───────────────────────────────────────────────────────
 mongoose.connect(MONGO_URI)
@@ -167,9 +171,12 @@ app.get('/api/admin/data', authenticateToken, async (req, res) => {
     }
 });
 
-// Fallback for undefined routes
+// Fallback: serve index.html for non-API routes (SPA-style)
 app.use((req, res) => {
-    res.status(404).json({ message: 'Route not found' });
+    if (req.path.startsWith('/api')) {
+        return res.status(404).json({ message: 'Route not found' });
+    }
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 // ─── START ────────────────────────────────────────────────────────────────────
