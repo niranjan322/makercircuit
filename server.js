@@ -50,6 +50,7 @@ mongoose.connect(MONGO_URI)
 const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true, lowercase: true, trim: true },
+    mobileNumber: { type: String, required: true },
     password: { type: String, required: true },
     createdAt: { type: Date, default: Date.now }
 });
@@ -90,8 +91,8 @@ app.get('/api/health', (req, res) => {
 // Register (no OTP — direct signup)
 app.post('/api/register', async (req, res) => {
     try {
-        const { name, email, password } = req.body;
-        if (!name || !email || !password)
+        const { name, email, mobileNumber, password } = req.body;
+        if (!name || !email || !mobileNumber || !password)
             return res.status(400).json({ message: 'All fields are required' });
 
         const existing = await User.findOne({ email: email.toLowerCase() });
@@ -99,7 +100,7 @@ app.post('/api/register', async (req, res) => {
             return res.status(400).json({ message: 'Email already registered' });
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        await User.create({ name, email, password: hashedPassword });
+        await User.create({ name, email, mobileNumber, password: hashedPassword });
 
         console.log(`[ACTION] Registered: ${email}`);
         res.status(201).json({ message: 'Account created successfully' });
@@ -132,6 +133,31 @@ app.post('/api/login', async (req, res) => {
 
         console.log(`[ACTION] Login: ${email}`);
         res.json({ message: 'Login successful', token, user: { name: user.name, email: user.email } });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// Forgot Password (Reset by mobile number)
+app.post('/api/forgot-password', async (req, res) => {
+    try {
+        const { mobileNumber, newPassword } = req.body;
+        if (!mobileNumber || !newPassword) {
+            return res.status(400).json({ message: 'Mobile number and new password are required' });
+        }
+
+        const user = await User.findOne({ mobileNumber });
+        if (!user) {
+            return res.status(404).json({ message: 'No account found with this mobile number' });
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        user.password = hashedPassword;
+        await user.save();
+
+        console.log(`[ACTION] Password Reset for mobile: ${mobileNumber}`);
+        res.json({ message: 'Password reset successfully. You can now login.' });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Server error' });

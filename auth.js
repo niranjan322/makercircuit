@@ -9,6 +9,9 @@ function switchTab(tab) {
     } else if (tab === 'register') {
         document.querySelectorAll('.tab-btn')[1].classList.add('active');
         document.getElementById('register-form').classList.add('active');
+    } else if (tab === 'forgot') {
+        // Removes active from both buttons, shows only the forgot form
+        document.getElementById('forgot-form').classList.add('active');
     }
 }
 
@@ -71,6 +74,7 @@ document.getElementById('register-form').addEventListener('submit', async (e) =>
     e.preventDefault();
     const name = document.getElementById('reg-name').value.trim();
     const email = document.getElementById('reg-email').value.trim();
+    const mobileNumber = document.getElementById('reg-mobile').value.trim();
     const password = document.getElementById('reg-password').value;
 
     if (!isStrongPassword(password)) {
@@ -84,7 +88,7 @@ document.getElementById('register-form').addEventListener('submit', async (e) =>
         const res = await apiFetch('/api/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, email, password })
+            body: JSON.stringify({ name, email, mobileNumber, password })
         });
         const data = await res.json();
 
@@ -101,5 +105,41 @@ document.getElementById('register-form').addEventListener('submit', async (e) =>
         }
     } catch {
         showMessage('reg-msg', 'Cannot connect to server. Try again later.');
+    }
+});
+
+// ─── FORGOT PASSWORD ──────────────────────────────────────────────────────────
+document.getElementById('forgot-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const mobileNumber = document.getElementById('forgot-mobile').value.trim();
+    const newPassword = document.getElementById('forgot-password').value;
+
+    if (!isStrongPassword(newPassword)) {
+        showMessage('forgot-msg', 'Password must be 8+ chars with uppercase, lowercase, number & symbol.');
+        return;
+    }
+
+    showMessage('forgot-msg', 'Resetting password...', false);
+
+    try {
+        const res = await apiFetch('/api/forgot-password', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ mobileNumber, newPassword })
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+            showMessage('forgot-msg', 'Password reset successful! Redirecting to login...', false);
+            setTimeout(() => {
+                switchTab('login');
+                document.getElementById('forgot-form').reset();
+                document.getElementById('forgot-msg').innerText = '';
+            }, 2000);
+        } else {
+            showMessage('forgot-msg', data.message || 'Reset failed');
+        }
+    } catch {
+        showMessage('forgot-msg', 'Cannot connect to server. Try again later.');
     }
 });
